@@ -1,0 +1,387 @@
+body {
+    font-family: Arial, sans-serif;
+	color: #acd;
+	background-color: #233;
+	margin-top: 0px;
+}
+
+button {
+	width: fit-content;
+	height: 40px;
+	background-color: #233;
+    border: 2px solid #acd;
+    color: #fff;
+    padding: 5px 10px;
+    text-align: center;
+	justify-content: space-between;
+    text-decoration: none;
+    font-size: 16px;
+    margin: 4px 4px;
+    cursor: pointer;
+    transition-duration: 0.1s;
+	border-radius: 10px;
+}
+
+a {
+	color: #acd;
+	margin-left: 5px;
+}
+button:hover {
+	scale: 120%;
+}
+button:active {
+	color: #233;
+	background-color: #fff;
+	transition-duration: 0.04s;
+	scale: 90%;
+}
+
+input {
+	font-size: 16px;
+    height: 20px;
+    border: 1px dashed #acd;
+    padding: 5px;
+    cursor: auto;
+	background-color: #244;
+	color: #acd;
+}
+input:hover {
+    border: 1px dashed #ff0;
+}
+
+#uiLog {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+	position: -webkit-sticky; /* For Safari */
+	background-color: #122;
+	align-items: center;
+}
+
+#itemList {
+    display: flex;
+	flex-wrap: wrap;
+	position: -webkit-sticky; /* For Safari */
+    position: sticky;
+    top: 0px;
+	background-color: #122;
+	align-items: center;
+	z-index: 2;
+	padding: 5px;
+	margin-right: 5px;
+}
+
+#itemList .itemContainer {
+    display: flex;
+    flex-direction: column;
+    margin-right: 0px;
+	margin-left: 10px;
+}
+#itemList #toolsContainer {
+	display: flex;
+	align-items: center;
+	width: fit-content;
+	height: 100%;
+    position: absolute;
+	right: 10px;
+}
+
+#itemList .item, .itemCost, .eraser {
+    width: flex;
+    height: 16px;
+    border: 1px solid #122;
+	text-align: center;
+	justify-content: space-between;
+    margin-bottom: 1px;
+	margin-top: 0px;
+    padding: 4px;
+    cursor: pointer;
+	background-color: #244;
+}
+#itemList .itemCost {
+    cursor: auto;
+}
+#itemList .itemImg img {
+    width: 50px;
+    height: 50px;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+#itemList .itemImg img {
+    width: 50px;
+    height: 50px;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#itemList #setCurrentLevelContainer{
+	display: flex;
+	justify-content: center;
+    align-items: center;
+}
+#itemList input#currentLevelSwitch{
+	height: 16px;
+	width: 16px;
+	background-color: #244;
+}
+
+
+#cursorFollower {
+	position: relative;
+    pointer-events: none;
+    background-color: rgba(0, 0, 0, 0.0);
+    padding: 0px;
+    border-radius: 5px;
+	align-items: right;
+}
+#cursorFollower img {
+	width: 30px;
+    height: 30px;
+	opacity: 0.5;
+}
+
+#itemList .item:hover, .eraser:hover {
+	color: #ff0;
+	transition-duration: 0.1s;
+	scale: 120%;
+}
+#itemList .item.selected, .eraser.selected {
+	color: #ff0;
+    border: 1px solid #ff0;
+	scale: 120%;
+	transition-duration: 0.04s;
+}
+#itemList #toolsContainer img {
+	width: 50px;
+    height: 50px;
+}
+
+#itemList .deleteBtn {
+	width: auto;
+	height: 20px;
+    border: 2px solid #e55;
+    padding: 0px 10px;
+    margin: 0px 0px;
+}
+#itemList .deleteBtn:hover {
+    background-color: #e55;
+}
+#itemList .deleteBtn:active {
+    background-color: #fff;
+	color: #e55;
+}
+
+#newItemInput {
+    width: 60px;
+	margin-left: 5px;
+	margin-right: 0px;
+}
+#addItemBtn,
+#moreItemBtn {
+	width: 40px;
+    border: 2px solid #496;
+}
+
+#addItemBtn:hover, 
+#moreItemBtn:hover {
+    background-color: #496;
+}
+#addItemBtn:active, 
+#moreItemBtn:active {
+    background-color: #fff;
+	color: #496;
+}
+
+#tablesContainer td {
+    width: 50px;
+	max-width: 50px;
+    height: 60px;
+	max-height: 64px;
+	font-size: 14px;
+	overflow: hidden;
+	direction: rtl;
+    text-align: center;
+    vertical-align: middle;
+	background-color: #244;
+	border: 1px solid #244;
+	cursor: cell;
+	margin-bottom: 0px;
+}
+
+#tablesContainer .itemImg img {
+    width: 50px;
+    height: 50px;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: -4px;
+	margin-top: -4px;
+}
+
+#tablesContainer td:hover {
+    /* background-color: #364 */
+	border: 1px solid #ff0;
+}
+
+#tablesContainer td.rogue {
+    color: #e55;
+}
+#tablesContainer td.plantfood {
+    background-image: linear-gradient(#244, #2a2);
+	border: 1px solid #0f0;
+}
+
+#tablesContainer {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.tableContainer {
+	flex-wrap: wrap;
+	margin-right: 20px;
+}
+
+.tableContainer .title h2 {
+    width: fit-content;
+	margin-bottom: 5px;
+}
+.tableContainer .headbtns > button {
+    width: 60px;
+	font-size: 12px;
+}
+.addTableBtn  {
+    border: 2px solid #496;
+}
+.addTableBtn:hover  {
+    background-color: #496;
+}
+.deleteTableBtn {
+    border: 2px solid #e55;
+}
+.deleteTableBtn:hover  {
+    background-color: #e55;
+}
+.addColumnBtn {
+	font-size: 18px;
+	color: #496;
+}
+.deleteColumnBtn {
+	font-size: 18px;
+	color: #e55;
+}
+.pfCount {
+    width: 20px;
+	margin-left: 0px;
+	margin-right: 5px;
+	margin-bottom: 5px;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  transform: translate(0%, 0%);
+  background-color: rgba(0,0,0,0.6);
+}
+
+
+.modal-content {
+  background-color: #233;
+  margin: auto;
+  padding: 20px;
+  border: 2px solid #244;
+  width: 80%;
+  margin-top: 150px;
+  margin-bottom: 50px;
+  overflow: hidden;
+}
+#modalItems {
+	display: flex;
+	flex-wrap: wrap;
+	flex-direction:row;
+}
+
+/* faking a line break*/
+#modalItems p{
+	padding-right: 10000px;
+	margin: 0px;
+	border: 1px solid #244;
+}
+.modal-content div{
+	width: fit-content;
+    display: flex;
+    flex-wrap: wrap;
+	flex-direction:column;
+	padding-right: 8px;
+	margin: 4px;
+	transition-duration: 0.1s;
+}
+.modal-content img{
+    width: 50px;
+    height: 50px;
+}
+
+.modal-content div:hover{
+	scale: 120%;
+	cursor: pointer;
+	color: #ff0;
+}
+.modal-content img:hover{
+    
+}
+
+.close {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:active {
+	transition-duration: 0.1s;
+	scale: 120%;
+  color: #e55;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+#switchesContainer {
+    display: flex;
+    flex-direction: row;
+    margin-top: 10px;
+	margin-bottom: 10px;
+	margin-left: 10px;
+}
+#switchesContainer div {
+	display: flex;
+	flex-wrap: wrap;
+    margin-right: 10px;
+	align-items: center;
+}
+
+#contributorDiv{
+	display: flex;
+    align-items: center;
+	padding: 10px;
+}
+#footerDiv{
+	display: flex;
+	justify-content: center;
+    align-items: center;
+	padding: 20px;
+}
+#footerDiv img#gp2{
+	width: 50px;
+	height: 50px;
+	margin-right: 5px;
+	margin-left: 5px;
+}

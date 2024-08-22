@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Wave Painter v0.4.1</title>
+    <meta content="Embed Title" property="og:title" />
+    <meta content="Site Description" property="og:description" />
+    <meta content="https://snack-ie.github.io/wave-painter" property="og:url" />
+    <meta content="https://snack-ie.github.io/wave-painter/smugthyme.png" property="og:image" />
+    <meta content="#223333" data-react-helmet="true" name="theme-color" />
+
+    <style>
+        /* Add your CSS here */
+    </style>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.2/FileSaver.min.js"></script>
+</head>
+<body>
+	<div id="itemList">
+		<div id="newItemInputContainer">
+			<input type="text" id="newItemInput" placeholder="Enter new item">
+			<button id="addItemBtn">+</button>
+			<button id="moreItemBtn">...</button>
+			<div id="setCurrentLevelContainer">
+				<input type="checkbox" id="currentLevelSwitch">
+				<label for="currentLevelSwitch">Add as CurrentLevel</label>
+			</div>
+		</div>
+		<div id="toolsContainer">
+			<div id="eraserContainer">
+				<div class="eraser">Eraser</div>
+				<img src='./icons/shovel.png' >
+			</div>
+		</div>
+	</div>
+	<div id="addItemDiv">
+		<div id="myModal" class="modal">
+		  <div class="modal-content">
+			<span class="close">&times;</span>
+			<p id="modalItems">Items will be displayed here</p>
+		  </div>
+		</div>
+	</div>
+
+	<div id="tablesContainer"></div>
+	<p></p>
+	<button id="renameTablesBtn">Rename all tables...</button>
+	<button id="exportBtn">Export JSON</button>
+    <input type="file" id="importBtn" style="display: none;" />
+    <button id="importFileBtn">Import JSON</button>
+	<p></p>
+	Image rescaling works but not while you're still editing the waves, can't bother to fix tho.
+
+	<div id="switchesContainer">
+		<div>
+			<div id="fontSizeSliderTxt">Text size: 14</div>
+			<input type="range" id="fontSizeSlider" min="0" max="24" value="14">
+		</div>
+		<div>
+			<div id="imgSizeSliderTxt">Image size: 50</div>
+			<input type="range" id="imgSizeSlider" min="0" max="100" value="50">
+		</div>
+		<div>
+			<div id="rowHeightSliderTxt">Row Height: 64</div>
+			<input type="range" id="rowHeightSlider" min="30" max="128" value="64">
+		</div>
+		<div>
+			<label for="resizeTableSwitch">Show all content:</label>
+			<input type="checkbox" id="resizeTableSwitch">
+		</div>
+		<div>
+			<label for="showCostSwitch">Item cost (cost does nothing for now):</label>
+			<input type="checkbox" id="showCostSwitch" checked="checked">
+		</div>
+		<div>
+			<label for="showHeaderSwitch">Wave configs (PF, jams, etc.):</label>
+			<input type="checkbox" id="showHeaderSwitch" checked="checked">
+		</div>
+		<div>
+			<label for="showButtonSwitch">Wave buttons:</label>
+			<input type="checkbox" id="showButtonSwitch" checked="checked">
+		</div>
+		<div>
+			<label for="showLogSwitch">Show log:</label>
+			<input type="checkbox" id="showLogSwitch" checked="checked">
+		</div>
+	</div>
+
+	<p></p>
+	problems with right-click dragging on Edge browser? go to edge://settings/appearance. scroll down to Customize browser → Enable Mouse Gesture → Turn Off
+	<p></p>
+	<p></p>
+	Thanks to the contributor to the zombie icons, check the current zombie pool<a href="https://docs.google.com/spreadsheets/d/1_M_QbhWCU29k-RioEQSnpUi92VGhjo3skbiupDJo-J8">here</a>
+	<div id="contributorDiv">
+		<img src='./icons/purple_games.png' >
+		purple_games 
+	</div>
+	<div id="footerDiv">
+		Wave Painter by goodp2 or whatever <img id="gp2" src='./icons/smugthyme.png' > || version 0.4.1 || Feb 11, 2024 || <a href="https://drive.google.com/drive/folders/1zekesFwzmi_IKGlDl_3LngDbvJksJ5VE"> Check for updates</a>
+	</div>
+	<div id="cursorFollower" style="position: absolute; display: none;">
+		<img src='./icons/sun.png' >
+	</div>
+	<div id="uiLog">
+		<div></div>
+	</div>
+    <script>
+        $(function() {
+			// Add item button
+			$("#addItemBtn").click(function() {
+				if ($("#newItemInput").val()){
+					createItem($("#newItemInput").val());
+				} else {
+					$("#moreItemBtn").click();
+				}
+			});
+			// Delete item buttons
+			$(document).on("click", ".deleteBtn", function(e) {
+				// Hide right click menu
+				e.stopPropagation();
+				// Remove the parent item
+				$(this).parent().remove();
+				// Update the items variable
+				items = $("#itemList .item");
+				$("#uiLog").text("Removed item");
+			});
+			// "enter" key can also add item
+			$("#newItemInput").keypress(function(e) {
+				// Check if the "Enter" key (13) was pressed
+				if (e.which == 13) {
+					// Run the Add item button click
+					$("#addItemBtn").click();
+					// Prevent default action of the "Enter" key
+					e.preventDefault();
+					$("#uiLog").text("Added new item using Enter");
+				}
+			});
+			$("#renameTablesBtn").click(function() {
+				$("#uiLog").text("Cancelled to rename all tables");
+				// Show a confirmation dialog
+				if (confirm("Automatically rename all waves to their current order? Default will be \"Wave1\",\"Wave2\",\"Wave3\", and so on")) {
+					// If confirmed, rename the tables
+					$(".tableContainer").each(function(index, tableContainer) {
+						// Set the table name to "Wave" followed by the table index + 1
+						$(tableContainer).find("h2").text("Wave" + (index + 1));
+						$("#uiLog").text("Renamed all tables");
+					});
+				}
+			});
+        });
+		
+		var selectedItem = {name: '',cost: '',img: ''};
+		var items = $("#itemList .item");
+		var selectedIndex = -1;
+		var isSelectEraser = false;
+		itemImgDefault = './icons/sun.png';
+		
+		var isCurrentLevel = false;
+		function createItem(itemName) {
+			if (itemName) {
+				itemCost = 0;
+				
+				if (isCurrentLevel || itemName.includes("@.") || itemName.includes("@CurrentLevel")) {
+					// Trim the "@." or "@CurrentLevel" out of the itemName
+					itemName = itemName.replace("@.","").replace("@CurrentLevel","");
+					// Add item as itemName@.
+					var newItemDiv = $("<div>").addClass("item").text(itemName + "@.");
+				} else {
+					var newItemDiv = $("<div>").addClass("item").text(itemName);
+				}
+
+				var deleteBtn = $("<button>").addClass("deleteBtn").text("×");
+				var itemContainer = $("<div>").addClass("itemContainer");
+				var itemImg = '';
+				// If input name match existing name on the pool, look for the cost & img
+				var itemLookup = itemsPool.find(item => item.name === itemName);
+				if (itemLookup) {
+					itemCost = itemLookup.cost;
+					itemLookup.img ? itemImg = itemLookup.img : itemImg = itemImgDefault;
+				} else {
+					itemCost = 0;
+					itemImg = itemImgDefault;
+				}
+				var itemCostDiv = $("<div>").addClass("itemCost").text(itemCost).attr("contenteditable", "true");
+				var itemImgDiv = $("<div>").addClass("itemImg").html('<img src="' + itemImg + '">');
+            
+				
+				itemContainer.append(newItemDiv);
+				itemContainer.append(itemImgDiv);
+				itemContainer.append(itemCostDiv);
+				itemContainer.append(deleteBtn);
+				
+				$("#itemList").append(itemContainer);
+				// Clear the input field
+				$("#newItemInput").val("");
+				// Update the items variable
+				items = $("#itemList .item");
+				$("#uiLog").text("Added new item");
+			}
+		}
+		
+		// On first load/reload
+		$(document).ready(function() {
+			selectItem("lostcity_armor1");
+
+			createTable("Wave1",3,5);
+			$("#uiLog").text("Log goes here. Click on the cell to add the selected item, right click to delete, swiping works");
+			$("#showLogSwitch").click();
+
+		});
+			
+    </script>
+	<script src="uiSwitches.js"></script>
+	<script src="jsonFunctions.js"></script>
+	<script src="tablePreviewCursor.js"></script>
+	<script src="tableFunctions.js"></script>
+	<script src="selectItems.js"></script>
+	<script src="itemPicker.js"></script>
+	<script src="./Item Pool/pool.js"></script>
+</body>
+</html>
